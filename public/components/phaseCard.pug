@@ -1,0 +1,124 @@
+mixin phaseCard(item, index)
+    -
+        let color = 'black';
+        if(item.id.startsWith('rrn:')){color = 'white'}
+        let backgroundColor = 'white';
+        let borderColor = 'white';
+        if(item.id.startsWith('rrn:')){backgroundColor = '#001C39'; borderColor = '#001C39'}
+        if(item.error){backgroundColor = '#2f2d2d'; borderColor = '#2f2d2d'}
+        if(item.error){color = 'white'}
+    if(item.id !== '')
+        .dataBlock(style={color: color, background: backgroundColor, 'border-color': borderColor})
+            .cardcontent
+                if(item.isDefault.tvApi === true && item.isDefault.dms === true)
+                    ribbon(class="ribbon ribbon-top-left")
+                        span= "★"
+                a(onclick="copyContents(" + index + ")")
+                    i(class="fa fa-copy" style="cursor: pointer; font-size: larger; position: absolute; right: 25px; top: 15px")
+                logoblock
+                    if item.id.startsWith('rrn:')
+                        img.logo(src='/public/logos/redbull_tv_logo.png', style="height: 50px;")
+                    else if item.id.startsWith('AA')
+                        img.logo(src="/public/logos/servus_tv_logo.png", style="height: 50px;")
+                    else if(item.error)
+                        img.logo(src="/public/logos/error_logo.png", style="height: 50px;")
+                if(!item.error)
+                    //- let timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+                    //p(style="text-align: center;")= new Date(item.start).toLocaleTimeString("de-DE", {timeZone: timezone, hour: '2-digit', minute: '2-digit'}) + " - " + new Date(item.end).toLocaleTimeString("de-DE", {timeZone: timezone, hour: '2-digit', minute: '2-digit'})
+                    p(style="text-align: center; font-size: smaller;")= "PDT | UTC | CE(S)T"
+                    p(style="text-align: center;")= new Date(item.start.airtable).toLocaleTimeString("de-DE", {timeZone: 'America/Los_Angeles', hour: '2-digit', minute: '2-digit'}) + " - " + new Date(item.end.airtable).toLocaleTimeString("de-DE", {timeZone: 'America/Los_Angeles', hour: '2-digit', minute: '2-digit'}) + " | " + new Date(item.start.airtable).toLocaleTimeString("de-DE", {timeZone: 'UTC', hour: '2-digit', minute: '2-digit'}) + " - " + new Date(item.end.airtable).toLocaleTimeString("de-DE", {timeZone: 'UTC', hour: '2-digit', minute: '2-digit'}) + " | " + new Date(item.start.airtable).toLocaleTimeString("de-DE", {timeZone: 'Europe/Berlin', hour: '2-digit', minute: '2-digit'}) + " - " + new Date(item.end.airtable).toLocaleTimeString("de-DE", {timeZone: 'Europe/Berlin', hour: '2-digit', minute: '2-digit'})
+                    content(id="card" + index)
+                        h2= item.eventStopTitle
+                        p= "TvAPI Phase: " + item.eventStopTvApiPhase.toUpperCase()
+                        if item.id.startsWith('rrn:')
+                            p= "COM Phase: " + item.eventStopComPhase.toUpperCase()
+                        p= "DMS Phase: " + item.eventStopDmsPhase.toUpperCase()
+                        h3= item.liveProgramTitle
+                        p= "TvAPI Phase: " + item.liveProgramTvApiPhase.toUpperCase()
+                        if item.id.startsWith('rrn:')
+                            p= "COM Phase: " + item.liveProgramComPhase.toUpperCase()
+                        p= "DMS Phase: " + item.liveProgramDmsPhase.toUpperCase()
+                        //hr
+                else
+                    h2= item.error
+                        p for
+                        h3= item.id
+            label(for="check" + index, class="togButton", id="checklabel" + index)= "Show additional Info"
+            input(type="checkbox", id="check" + index, class="togCheck")
+            additionalInfo(class="togContent")
+                if(!item.error)
+                    h4= "Fallback Stream"
+                    p(style="font-size: small;")=  item.primaryStream
+                    h4= "Event Id"
+                    p= item.id
+                //h4 TimeSyncCheck
+                //read out data
+                //make times in sync var (string ex: Crepostart wrong, TVAPIend wrong, .....) in checkphase
+                h4= "Timecheck(Airtable, DMS, TvAPI, Crepo):"
+
+                table(style={"border-spacing": "30px","border-spacing": "0px","width": "100%","text-align": "center", color: color, background: backgroundColor, 'border-color': borderColor}, border='1px solid')
+                    tr
+                        th Time
+                        th Start (UTC)
+                        th End (UTC)
+                        th Airtable Sync
+                    tr
+                        td
+                            a(href=item.atlink target="_blank" + 'Airtable', style = {color: color}) Airtable
+                        td=item.start.airtable===""?"no values set":new Date(item.start.airtable).toLocaleTimeString('en-ZA', { timeZone: 'UTC', year:'2-digit', month:'2-digit', day:'2-digit', hour: '2-digit', minute: '2-digit'})
+                        td=item.end.airtable===""?"no values set":new Date(item.end.airtable).toLocaleTimeString('en-ZA', { timeZone: 'UTC', year:'2-digit', month:'2-digit', day:'2-digit', hour: '2-digit', minute: '2-digit'})
+                        td=(item.start.airtable !== "")&&(item.end.airtable !== "")?"✓":"x"
+                    tr
+                        td
+                            a(href=item.lotlink target="_blank" + 'DMS', style = {color: color}) DMS
+                        td=item.start.dms===""?"no values set":new Date(item.start.dms).toLocaleTimeString('en-ZA', { timeZone: 'UTC', year:'2-digit', month:'2-digit', day:'2-digit', hour: '2-digit', minute: '2-digit'})
+                        td=item.end.dms===""?"no values set":new Date(item.end.dms).toLocaleTimeString('en-ZA', { timeZone: 'UTC', year:'2-digit', month:'2-digit', day:'2-digit', hour: '2-digit', minute: '2-digit'})
+                        td=item.syncedwithat.dms?"✓":"x"
+                    tr
+                        td TvAPI
+                        td=item.start.tvapi===""?"no values set":new Date(item.start.tvapi).toLocaleTimeString('en-ZA', { timeZone: 'UTC', year:'2-digit', month:'2-digit', day:'2-digit', hour: '2-digit', minute: '2-digit'})
+                        td=item.end.tvapi===""?"no values set":new Date(item.end.tvapi).toLocaleTimeString('en-ZA', { timeZone: 'UTC', year:'2-digit', month:'2-digit', day:'2-digit', hour: '2-digit', minute: '2-digit'})
+                        td=item.syncedwithat.tvapi?"✓":"x"
+                    tr
+                        if(item.id.startsWith('rrn:'))
+                            td
+                                a(href=item.crepolink target="_blank" + 'Crepo', style = {color: color}) Crepo
+                            td=item.start.crepo===""?"no values set":new Date(item.start.crepo).toLocaleTimeString('en-ZA', { timeZone: 'UTC', year:'2-digit', month:'2-digit', day:'2-digit', hour: '2-digit', minute: '2-digit'})
+                            td=item.end.crepo===""?"no values set":new Date(item.end.crepo).toLocaleTimeString('en-ZA', { timeZone: 'UTC', year:'2-digit', month:'2-digit', day:'2-digit', hour: '2-digit', minute: '2-digit'})
+                            td=item.syncedwithat.crepo?"✓":"x"
+                if(item.embedsTvApi.right && item.embedsTvApi.bottom)
+                    h4= "Features"
+                    if(item.easeLive !== "false")
+                        p="Ease Live: " + item.easeLive
+                    p= "Cuetag: " + item.cuetag
+                    if item.cbHidden
+                        p= "CB hidden: " + item.cbHidden
+                    if item.embedsTvApi.right.length > 0 || item.embedsTvApi.bottom.length > 0
+                        h4= "Embeds"
+                        if item.embedsTvApi.right.length > 0
+                            p= "Right"
+                            ul
+                                each embed in item.embedsTvApi.right
+                                    li= embed.title
+                        if item.embedsTvApi.bottom.length > 0
+                            p= "Bottom"
+                            ul
+                                each embed in item.embedsTvApi.bottom
+                                    li= embed.title
+
+    script.
+        additionalInfoLabel["marker"+'#{index}'] = $("#checklabel" + "#{index}")
+        //console.log('#check' + "#{index}" + " is checked:  " + $('#check' + "#{index}").is(':checked'))
+
+        if ($('#check' + "#{index}").is(':checked') || JSON.parse(localStorage.getItem('checkboxValues'))['check' + "#{index}"] === true) {
+            additionalInfoLabel["marker"+'#{index}'].text('Hide additional Info')
+        } else {
+            additionalInfoLabel["marker"+'#{index}'].text('Show additional Info')
+        }
+        additionalInfoLabel["marker"+'#{index}'].on("click", function () {
+            //console.log("#checklabel" + "#{item.id}" + "#{index}")
+            let el = $(this);
+            el.text() === "Hide additional Info"
+                ? el.text("Show additional Info")
+                : el.text("Hide additional Info");
+        });

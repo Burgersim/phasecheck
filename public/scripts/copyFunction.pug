@@ -1,0 +1,10 @@
+script.
+    function copyContents(cardId) {
+        console.log("Card Id: " + cardId)
+        let copiedContent = document.getElementById("card" + cardId).innerText
+        navigator.clipboard.writeText(copiedContent)
+        //console.log(copiedContent)
+        //let data = "#{liveProgramTitleArray}".split(',')
+        //console.log(data)
+        swal("copied")
+    }

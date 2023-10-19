@@ -1,0 +1,65 @@
+doctype=html
+include ../public/components/phaseCard
+include ../public/components/head
+include ../public/components/header
+
+html
+    +head('Phase Check Dashboard')
+    body
+        +header(date)
+        script.
+            //console.log(JSON.parse(localStorage.getItem('checkboxValues')))
+            //console.log(JSON.parse(localStorage.getItem('checkboxValues'))['check100'])
+            let additionalInfoLabel = []
+            //console.log(additionalInfoLabel)
+        .wrapper
+            label(for="rbtv", class="dashButton", id="rbtvlabel", style="background-color: #001C39; color: white;")= "Hide RBTV"
+            input(type="checkbox", id="rbtv", class="dashCheck")
+            stvContent(class="dashContent")
+                each item, index in phaseDataRbtv
+                    +phaseCard(item, index + 1000)
+        .wrapper
+            label(for="stv", class="dashButton", id="stvlabel", style="background-color: white;")= "Hide STV"
+            input(type="checkbox", id="stv", class="dashCheck")
+            rbtvContent(class="dashContent")
+                each item, index in phaseDataStv
+                    +phaseCard(item, index + 100)
+
+        include ../public/scripts/refreshFunction
+        include ../public/scripts/copyFunction
+        include ../public/scripts/collapsible
+        include ../public/scripts/toggleDivVisibility
+        include ../public/scripts/checkboxPersistence
+            
+            
+        script.
+            rbtvLabel = $('#rbtvlabel')
+
+            if ($('#rbtv').is(':checked')) {
+                rbtvLabel.text('Show RBTV')
+            } else {
+                rbtvLabel.text('Hide RBTV')
+            }
+
+            rbtvLabel.on("click", function () {
+                let el = $(this);
+                el.text() === "Show RBTV"
+                    ? el.text("Hide RBTV")
+                    : el.text("Show RBTV");
+            });
+
+            stvLabel = $('#stvlabel')
+
+            if ($('#stv').is(':checked')) {
+                stvLabel.text('Show STV')
+            } else {
+                stvLabel.text('Hide STV')
+            }
+
+            stvLabel.on("click", function () {
+                let el = $(this);
+                el.text() === "Show STV"
+                    ? el.text("Hide STV")
+                    : el.text("Show STV");
+            });
+

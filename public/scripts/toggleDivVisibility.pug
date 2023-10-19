@@ -1,0 +1,13 @@
+script.
+    function toggleVisibility(divId) {
+        var x = document.getElementById(divId);
+        if (x.style.display === "none") {
+            x.style.display = "block";
+            document.cookie = divId + "Hidden=false; samesite=strict"
+            console.log(document.cookie)
+        } else {
+            x.style.display = "none";
+            document.cookie = divId + "Hidden=true; samesite=strict"
+            console.log(document.cookie)
+        }
+    }

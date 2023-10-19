@@ -1,0 +1,20 @@
+doctype=html
+include ../public/components/phaseCard
+include ../public/components/head
+include ../public/components/header
+
+html
+    +head('Phase Check')
+    body
+        script.
+            let additionalInfoLabel = []
+            console.log(additionalInfoLabel)
+        +header("individual Assets")
+        .wrapper
+            each item, index in phaseData
+                +phaseCard(item, index, timezone)
+
+        include ../public/scripts/refreshFunction
+        include ../public/scripts/copyFunction
+        include ../public/scripts/checkboxPersistence
+

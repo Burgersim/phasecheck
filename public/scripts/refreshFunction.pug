@@ -1,0 +1,14 @@
+script.
+    $(function(){
+        $('#refreshToggle').change(function(){
+            //console.log("Toggle: " + $(this).prop('checked'))
+            if ($('#refreshToggle').prop('checked') === true) {
+                window.location.reload()
+            }
+        })
+    })
+    setTimeout(function() {
+        if ($('#refreshToggle').prop('checked') === true) {
+            window.location.reload()
+        }
+    }, 30000)

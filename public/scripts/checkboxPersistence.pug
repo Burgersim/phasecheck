@@ -1,0 +1,17 @@
+script.
+    let checkboxValues = JSON.parse(localStorage.getItem('checkboxValues')) || {};
+    let $checkboxes = $(":checkbox");
+    //console.log(localStorage.getItem('checkboxValues'))
+
+    $checkboxes.on("change", function () {
+        //console.log(this.id + ": " + this.checked)
+        $checkboxes.each(function () {
+            checkboxValues[this.id] = this.checked;
+        });
+        localStorage.setItem("checkboxValues", JSON.stringify(checkboxValues));
+    });
+
+    $.each(checkboxValues, function (key, value) {
+        $("#" + key).prop('checked', value);
+        //console.log("#" + key + " checked: " + value)
+    });
